@@ -10,6 +10,8 @@ from homeassistant.util import dt as dt_util
 from .const import DOMAIN
 from .state import WakeClockState
 
+_DOW_ABBR = ["ma", "di", "wo", "do", "vr", "za", "zo"]  # datetime.weekday(): mon=0..sun=6
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -34,13 +36,18 @@ class WakeClockNextAlarmSensor(SensorEntity):
 
     @property
     def native_value(self) -> datetime | None:
-        # Switch uit => sensor "leeg"
-        if not self._state.enabled:
-            return None
-
+        # Altijd het opgeslagen nextalarm tonen, ook als switch uit is
         dt = self._state.get_nextalarm_dt()
         if dt is None:
             return None
-
-        # Home Assistant verwacht tz-aware datetime voor timestamp sensors
         return dt_util.as_utc(dt)
+
+    @property
+    def extra_state_attributes(self) -> dict:
+        dt = self._state.get_nextalarm_dt()
+        if dt is None:
+            return {"nextalarm_label": ""}
+
+        local = dt_util.as_local(dt)
+        label = f"{_DOW_ABBR[local.weekday()]} {local.strftime('%H:%M')}"
+        return {"nextalarm_label": label}
