@@ -1,0 +1,7 @@
+{
+  "name": "WakeClock",
+  "content_in_root": false,
+  "render_readme": true,
+  "domains": ["wakeclock"],
+  "homeassistant": "2024.6.0"
+}
