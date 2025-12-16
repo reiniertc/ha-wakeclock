@@ -51,7 +51,6 @@ class WakeClockSwitch(SwitchEntity):
 
     async def async_turn_off(self, **kwargs) -> None:
         self._state.enabled = False
-        # Optional: clear nextalarm when disabled
-        self._state.set_nextalarm_dt(None)
+        # nextalarm blijft staan; sensor blijft dus ook een timestamp tonen
         await self.hass.data[DOMAIN]["save"]()
         self.async_write_ha_state()
