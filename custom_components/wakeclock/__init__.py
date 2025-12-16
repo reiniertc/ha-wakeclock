@@ -8,8 +8,9 @@ from .services import async_load_state, async_save_state, async_register_service
 
 PLATFORMS: list[str] = ["switch", "sensor"]
 
+
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
-    """Set up the WakeClock integration (no YAML config; UI via config flow)."""
+    """Set up the WakeClock integration (no YAML config)."""
     hass.data.setdefault(DOMAIN, {})
     return True
 
@@ -26,11 +27,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data[DOMAIN]["save"] = _save
 
-def _notify_update() -> None:
-    for key in ("entity_switch", "entity_sensor"):
-        ent = hass.data[DOMAIN].get(key)
-        if ent is not None:
-            ent.async_write_ha_state()
+    def _notify_update() -> None:
+        for key in ("entity_switch", "entity_sensor"):
+            ent = hass.data[DOMAIN].get(key)
+            if ent is not None:
+                ent.async_write_ha_state()
 
     async_register_services(
         hass,
