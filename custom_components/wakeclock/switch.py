@@ -5,7 +5,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, ATTR_SNOOZETIME, ATTR_NEXTALARM, DAYS
-from .state import WakeClockState
+from .state import ALARM_DISABLED, ALARM_ENABLED, WakeClockState
 
 
 async def async_setup_entry(
@@ -38,6 +38,7 @@ class WakeClockSwitch(SwitchEntity):
         attrs = {
             ATTR_SNOOZETIME: self._state.snoozetime,
             ATTR_NEXTALARM: self._state.nextalarm,
+            "alarm_state": self._state.alarm_state,
         }
         for d in DAYS:
             attrs[d] = getattr(self._state, d)
@@ -45,12 +46,14 @@ class WakeClockSwitch(SwitchEntity):
 
     async def async_turn_on(self, **kwargs) -> None:
         self._state.enabled = True
+        self._state.alarm_state = ALARM_ENABLED
         self._state.recalc_next()
         await self.hass.data[DOMAIN]["save"]()
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs) -> None:
         self._state.enabled = False
-        # nextalarm blijft staan; sensor blijft dus ook een timestamp tonen
+        self._state.alarm_state = ALARM_DISABLED
+        # nextalarm blijft staan; sensor blijft timestamp tonen
         await self.hass.data[DOMAIN]["save"]()
         self.async_write_ha_state()
