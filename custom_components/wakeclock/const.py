@@ -5,11 +5,11 @@ DEFAULT_SNOOZE_MINUTES = 9
 
 WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 ATTR_MAP = {
-    "mon": "maandag",
-    "tue": "dinsdag",
-    "wed": "woensdag",
-    "thu": "donderdag",
-    "fri": "vrijdag",
-    "sat": "zaterdag",
-    "sun": "zondag",
+    "ma": "maandag",
+    "di": "dinsdag",
+    "wo": "woensdag",
+    "do": "donderdag",
+    "vr": "vrijdag",
+    "za": "zaterdag",
+    "zo": "zondag",
 }
